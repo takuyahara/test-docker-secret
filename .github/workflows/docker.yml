@@ -1,0 +1,33 @@
+name: build
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      IMAGE: ${{ github.ref_name }}
+      GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+      - run: git config --global url.https://$GH_ACCESS_TOKEN@github.com/.insteadOf https://github.com/
+      - name: Set env
+        run: |
+          OWNER=$(echo ${{ github.repository_owner }})
+          echo "RELEASE_OWNER=$OWNER" >> $GITHUB_ENV
+          echo "RELEASE_IMAGE=$IMAGE" >> $GITHUB_ENV
+          VERSION=$(echo ${{ github.ref }} | sed -e "s/refs\/tags\///g")
+          echo "RELEASE_VERSION=$VERSION" >> $GITHUB_ENV
+      - name: Build image
+        run: |
+          docker build -t ghcr.io/${{ env.RELEASE_OWNER }}/${{ env.RELEASE_IMAGE }}:latest .
+      - name: Login
+        run: |
+          echo $GH_ACCESS_TOKEN | docker login ghcr.io -u ${{ env.RELEASE_OWNER }} --password-stdin
+      - name: Push by tag name
+        run: |
+          docker push ghcr.io/${{ env.RELEASE_OWNER }}/${{ env.RELEASE_IMAGE }}:latest
