@@ -6,14 +6,6 @@ Docker コンテナにおける機密情報の扱い方を検証した記録。
 
 ### ❌ 一時ファイルを使用後に削除する
 
-Docker イメージをプルする。
-
-```bash
-$ docker login ghcr.io -u username
-Password: <Enter PAT with read:packages>
-$ docker pull ghcr.io/takuyahara/access-to-deleted-file:latest
-```
-
 最終版のレイヤーでは `.env` が存在しないことを確認する。
 
 ```bash
