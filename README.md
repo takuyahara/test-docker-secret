@@ -9,6 +9,7 @@ Docker コンテナにおける機密情報の扱い方を検証した記録。
 最終版のレイヤーでは `.env` が存在しないことを確認する。
 
 ```bash
+$ docker pull ghcr.io/takuyahara/access-to-deleted-file:latest
 $ docker run ghcr.io/takuyahara/access-to-deleted-file:latest cat .env
 cat: can't open '.env': No such file or directory
 ```
