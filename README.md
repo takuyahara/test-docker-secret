@@ -14,6 +14,7 @@ Docker コンテナにおける機密情報の扱い方を検証した記録。
 Docker イメージのデータをセーブして展開する。
 
 ```bash
+$ docker pull ghcr.io/takuyahara/distroless:latest
 $ docker save -o save.tar ghcr.io/takuyahara/distroless:latest
 $ mkdir save && tar xfv save.tar -C save
 $ cd save && ls -l
